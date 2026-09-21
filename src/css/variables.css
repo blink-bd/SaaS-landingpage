@@ -1,0 +1,88 @@
+/* ============================================
+   نظام التصميم الأساسي - متغيرات مشتركة
+   ============================================ */
+:root {
+  /* الألوان الأساسية */
+  --color-primary: #146356;        /* أخضر مزرق عميق - يوحي بالثقة والدفع عند الاستلام */
+  --color-primary-dark: #0D4B41;
+  --color-primary-light: #1C8577;
+  --color-primary-tint: #E7F1EF;   /* خلفية فاتحة جدًا للعناصر المرتبطة بالبراند */
+
+  --color-accent: #D9922E;         /* ذهبي دافئ - للعروض والخصومات */
+  --color-accent-dark: #B5751C;
+
+  --color-danger: #C1352B;
+  --color-danger-tint: #FBEAE9;
+  --color-success: #1E7A4C;
+  --color-success-tint: #E7F5EE;
+  --color-warning: #B8791A;
+  --color-warning-tint: #FBF0DE;
+
+  --color-whatsapp: #1E9E5A;
+
+  /* درجات الرمادي */
+  --gray-900: #1A1F1E;
+  --gray-700: #444B49;
+  --gray-500: #6E7573;
+  --gray-300: #D4D8D6;
+  --gray-100: #F3F5F4;
+  --white: #FFFFFF;
+
+  /* الخط */
+  --font-main: 'Cairo', sans-serif;
+
+  /* الحواف والظلال */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --shadow-card: 0 2px 14px rgba(20, 99, 86, 0.08);
+  --shadow-float: 0 8px 28px rgba(20, 99, 86, 0.18);
+
+  /* المسافات */
+  --space-section: 72px;
+  --container-width: 1180px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  color: var(--gray-900);
+  background: var(--white);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+button { font-family: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ============================================
+   فوتر حقوق المنصة (مركزي، بيتحكم فيه المدير العام بس)
+   شغال في كل الصفحات لأن الملف ده متحمّل في كل حتة
+   ============================================ */
+.platform-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--gray-500);
+  padding: 14px 10px;
+  border-top: 1px solid var(--gray-100);
+  margin-top: 26px;
+}
+.platform-footer:empty { display: none; }
+.platform-footer a { color: var(--gray-500); text-decoration: underline; }
+.platform-footer a:hover { color: var(--color-primary); }

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسوق الآن | أفضل المنتجات بأفضل الأسعار</title>
+<meta name="description" content="اطلب منتجك الآن مع الدفع عند الاستلام وتوصيل سريع لجميع المحافظات.">
+<meta name="keywords" content="تسوق اونلاين, شراء منتجات, الدفع عند الاستلام">
+<link rel="canonical" href="https://example.com/">
+
+<meta property="og:type" content="product">
+<meta property="og:title" content="تسوق الآن | أفضل المنتجات بأفضل الأسعار">
+<meta property="og:description" content="اطلب الآن مع الدفع عند الاستلام وتوصيل سريع.">
+<meta property="og:locale" content="ar_EG">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="تسوق الآن">
+<meta name="twitter:description" content="اطلب الآن مع الدفع عند الاستلام">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="src/css/variables.css">
+<link rel="stylesheet" href="src/css/style.css">
+<link rel="stylesheet" href="src/css/animations.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo">
+      <img id="storeLogo" src="assets/favicon.svg" alt="شعار المتجر">
+      <span id="storeNameLabel">المتجر</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#benefits">المميزات</a>
+      <a href="#gallery">معرض الصور</a>
+      <a href="#specs">المواصفات</a>
+      <a href="#faq">الأسئلة الشائعة</a>
+      <a href="#contact">تواصل معنا</a>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-btn" id="headerCallBtn" href="#" aria-label="اتصل بنا">📞</a>
+      <a class="icon-btn" id="headerWhatsBtn" href="#" target="_blank" aria-label="واتساب">💬</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-text fade-in-up">
+      <span class="hero-badge">🔥 عرض لفترة محدودة</span>
+      <h1 id="productHeadline">جاري التحميل...</h1>
+      <p class="hero-desc" id="productDescription"></p>
+      <div class="hero-cta-group">
+        <a href="#order" class="btn btn-primary btn-lg pulse-cta">اطلب الآن 🛒</a>
+        <a href="#gallery" class="btn btn-outline btn-lg">شاهد الصور</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item">✅ دفع عند الاستلام</div>
+        <div class="trust-item">🚚 توصيل سريع</div>
+        <div class="trust-item">↩️ ضمان استبدال</div>
+      </div>
+    </div>
+    <div class="hero-image-wrap fade-in-up">
+      <img id="heroMainImage" src="" alt="صورة المنتج الرئيسية" width="900" height="900">
+      <div class="hero-price-float">
+        <span class="badge-discount" id="heroBadge">خصم</span>
+        <strong id="heroPrice" style="font-size:20px;">0 ج.م</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUST STRIP ===== -->
+<div class="trust-strip">
+  <div class="container">
+    <div class="item"><span>🚚</span>توصيل لكل المحافظات</div>
+    <div class="item"><span>💵</span>الدفع عند الاستلام</div>
+    <div class="item"><span>🔄</span>ضمان استبدال</div>
+    <div class="item"><span>⭐</span>جودة موثوقة</div>
+  </div>
+</div>
+
+<!-- ===== BENEFITS ===== -->
+<section id="benefits">
+  <div class="container">
+    <h2 class="section-title">لماذا تختار منتجنا؟</h2>
+    <p class="section-subtitle">مميزات حقيقية تستحق تجربتها</p>
+    <div class="benefits-grid" id="benefitsGrid"></div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section id="gallery" style="background:var(--gray-100);">
+  <div class="container">
+    <h2 class="section-title">معرض الصور</h2>
+    <p class="section-subtitle">شاهد المنتج من كل الزوايا</p>
+    <div style="max-width:520px;margin:0 auto;">
+      <div class="gallery-main"><img id="galleryMainImg" src="" alt="صورة المنتج" loading="lazy"></div>
+      <div class="gallery-thumbs" id="galleryThumbs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES + SPECS ===== -->
+<section id="specs">
+  <div class="container">
+    <h2 class="section-title">المميزات والمواصفات</h2>
+    <div class="features-specs">
+      <div>
+        <h3 style="margin-bottom:18px;font-size:20px;">أبرز المميزات</h3>
+        <ul class="features-list" id="featuresList"></ul>
+      </div>
+      <div>
+        <h3 style="margin-bottom:18px;font-size:20px;">المواصفات الفنية</h3>
+        <table class="specs-table" id="specsTable"></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ORDER SECTION ===== -->
+<section id="order" class="order-section">
+  <div class="container">
+    <h2 class="section-title">أكمل طلبك الآن</h2>
+    <p class="section-subtitle">الدفع عند الاستلام - بدون أي مخاطرة</p>
+
+    <div class="order-wrapper">
+      <!-- Summary -->
+      <div class="order-summary-card fade-in-up">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+          <img id="summaryImg" src="" alt="صورة المنتج" style="width:80px;height:80px;border-radius:12px;object-fit:cover;">
+          <div>
+            <h3 id="summaryName" style="font-size:17px;font-weight:800;">اسم المنتج</h3>
+            <span class="badge-stock" id="summaryStock">متوفر</span>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <span class="price-current" id="summaryPrice">0 ج.م</span>
+          <span class="price-old" id="summaryOldPrice"></span>
+          <span class="badge-discount" id="summaryBadge"></span>
+        </div>
+
+        <label style="font-weight:700;font-size:14px;display:block;margin-top:16px;">الكمية</label>
+        <div class="qty-selector">
+          <button type="button" id="qtyMinus">−</button>
+          <input type="number" id="qtyInput" value="1" min="1" max="20" readonly>
+          <button type="button" id="qtyPlus">+</button>
+        </div>
+
+        <div class="order-totals">
+          <div class="row"><span>سعر المنتج</span><span id="totalUnitPrice">0 ج.م</span></div>
+          <div class="row"><span>الكمية</span><span id="totalQty">1</span></div>
+          <div class="row"><span>رسوم التوصيل</span><span id="totalDelivery">0 ج.م</span></div>
+          <div class="row total"><span>الإجمالي</span><span id="totalFinal">0 ج.م</span></div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="order-summary-card fade-in-up">
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:20px;">بيانات التوصيل</h3>
+        <form id="orderForm" novalidate>
+          <input type="text" name="website" class="honeypot-field" tabindex="-1" autocomplete="off">
+
+          <div class="form-group">
+            <label for="fullName">الاسم بالكامل *</label>
+            <input type="text" id="fullName" name="fullName" class="form-control" placeholder="مثال: أحمد محمد" required>
+            <div class="error-msg">يرجى إدخال اسم صحيح (3 أحرف على الأقل)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">رقم الهاتف *</label>
+            <input type="tel" id="phone" name="phone" class="form-control" placeholder="01xxxxxxxxx" required>
+            <div class="error-msg">يرجى إدخال رقم هاتف مصري صحيح</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="governorate">المحافظة *</label>
+              <select id="governorate" name="governorate" class="form-control" required>
+                <option value="">اختر المحافظة</option>
+              </select>
+              <div class="error-msg">يرجى اختيار المحافظة</div>
+            </div>
+            <div class="form-group">
+              <label for="quantityField">الكمية *</label>
+              <input type="number" id="quantityField" class="form-control" value="1" min="1" max="20" readonly>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">العنوان بالتفصيل *</label>
+            <textarea id="address" name="address" class="form-control" rows="3" placeholder="اسم الشارع، رقم العمارة، علامة مميزة..." required></textarea>
+            <div class="error-msg">يرجى إدخال عنوان تفصيلي (5 أحرف على الأقل)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">ملاحظات (اختياري)</label>
+            <textarea id="notes" name="notes" class="form-control" rows="2" placeholder="أي ملاحظات إضافية..."></textarea>
+          </div>
+
+          <button type="submit" id="submitOrderBtn" class="btn btn-primary btn-block btn-lg">
+            <span id="submitBtnText">اطلب الآن</span>
+          </button>
+        </form>
+
+        <!-- Success Panel -->
+        <div class="success-panel" id="successPanel" style="display:none;">
+          <div class="icon">✅</div>
+          <h3>تم تسجيل الطلب بنجاح!</h3>
+          <p>سيتم التواصل معك قريباً لتأكيد الطلب</p>
+          <div class="order-id">رقم الطلب: <span id="successOrderId"></span></div>
+          <div class="success-actions">
+            <a href="#" id="whatsappConfirmBtn" class="btn btn-whatsapp" target="_blank">تأكيد عبر واتساب</a>
+            <button class="btn btn-outline" onclick="location.reload()">طلب جديد</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section id="faq" style="background:var(--gray-100);">
+  <div class="container" style="max-width:760px;">
+    <h2 class="section-title">الأسئلة الشائعة</h2>
+    <div id="faqList"></div>
+  </div>
+</section>
+
+<!-- ===== CONTACT / FOOTER ===== -->
+<footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4 id="footerStoreName">المتجر</h4>
+        <p id="footerDeliveryInfo"></p>
+        <div class="footer-social">
+          <a id="footerFacebook" href="#" target="_blank">📘</a>
+          <a id="footerInstagram" href="#" target="_blank">📷</a>
+        </div>
+      </div>
+      <div>
+        <h4>روابط سريعة</h4>
+        <p><a href="#benefits">المميزات</a></p>
+        <p><a href="#gallery">معرض الصور</a></p>
+        <p><a href="#faq">الأسئلة الشائعة</a></p>
+      </div>
+      <div>
+        <h4>تواصل معنا</h4>
+        <p>📞 <a id="footerPhone" href="#"></a></p>
+        <p>💬 <a id="footerWhatsapp" href="#" target="_blank">راسلنا على واتساب</a></p>
+        <p id="footerAddress"></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span id="footerYear"></span> جميع الحقوق محفوظة
+    </div>
+  </div>
+</footer>
+
+<!-- ===== STICKY MOBILE CTA ===== -->
+<div class="sticky-cta" id="stickyCta">
+  <span class="price" id="stickyPrice">0 ج.م</span>
+  <a href="#order" class="btn btn-primary btn-block">اطلب الآن</a>
+</div>
+
+<a class="float-whatsapp" id="floatWhatsapp" href="#" target="_blank" aria-label="تواصل عبر واتساب">💬</a>
+
+<div class="platform-footer" id="platformFooter"></div>
+
+<script src="config/config.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/api.js"></script>
+<script src="src/js/main.js"></script>
+<script src="src/js/order-form.js"></script>
+</body>
+</html>

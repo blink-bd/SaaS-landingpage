@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة المدير العام | إدارة العملاء</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/variables.css">
+<link rel="stylesheet" href="../src/css/style.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img id="platformLogo" src="" alt="" style="display:none;">
+      <h2>👑 <span id="platformNameLabel">المدير العام</span></h2>
+    </div>
+    <nav>
+      <a href="#" data-section="clients" class="active">🏬 العملاء</a>
+      <a href="#" data-section="branding">🎨 الهوية البصرية</a>
+    </nav>
+    <button class="logout-btn" id="logoutBtn">🚪 تسجيل الخروج</button>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button class="hamburger" id="hamburgerBtn">☰</button>
+      <h1 id="pageTitle">إدارة العملاء (المتاجر)</h1>
+      <button class="btn btn-primary" id="addClientBtn">➕ إضافة عميل جديد</button>
+    </div>
+
+    <!-- CLIENTS -->
+    <section class="section-panel active" id="section-clients">
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <div class="toolbar">
+        <input type="text" id="clientSearch" placeholder="🔍 بحث باسم المتجر أو اليوزر...">
+      </div>
+
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>اسم المتجر</th><th>اسم المستخدم</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BRANDING -->
+    <section class="section-panel" id="section-branding">
+      <form class="settings-form" id="brandingForm">
+        <p class="settings-hint">الهوية دي بتظهر في صفحة تسجيل الدخول وفي لوحتك انت بس (مش هتأثر على هوية أي تاجر، كل تاجر ليه ألوانه ولوجوه الخاص بيه من لوحته هو).</p>
+        <div class="form-group"><label>اسم المنصة</label><input class="form-control" name="PlatformName" placeholder="منصة إدارة المتاجر"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>اللون الأساسي</label>
+            <div class="color-input-row">
+              <input type="color" class="color-swatch" data-pair="PrimaryColor">
+              <input class="form-control" name="PrimaryColor" placeholder="#146356">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>اللون الثانوي</label>
+            <div class="color-input-row">
+              <input type="color" class="color-swatch" data-pair="AccentColor">
+              <input class="form-control" name="AccentColor" placeholder="#D9922E">
+            </div>
+          </div>
+        </div>
+        <div class="form-group"><label>رابط اللوجو (صورة مباشرة)</label><input class="form-control" name="LogoURL" placeholder="https://..."></div>
+
+        <hr style="border:none;border-top:1px dashed var(--gray-300);margin:22px 0;">
+        <p class="settings-hint">النص ده هيظهر في فوتر رفيع أسفل كل صفحة منتج لأي تاجر، وأسفل كل لوحة تحكم (تاجر أو مدير عام)، ومايقدرش أي تاجر يشيله أو يعدّله.</p>
+        <div class="form-group"><label>نص حقوق الملكية (Footer)</label><input class="form-control" name="FooterText" placeholder="© 2026 اسم شركتك - جميع الحقوق محفوظة"></div>
+        <div class="form-group"><label>رابط الفوتر (اختياري)</label><input class="form-control" name="FooterLink" placeholder="https://yourcompany.com"></div>
+
+        <button type="submit" class="btn btn-primary btn-block">💾 حفظ الهوية البصرية</button>
+      </form>
+    </section>
+
+    <div class="platform-footer" id="platformFooter"></div>
+  </main>
+</div>
+
+<!-- Modal: Add Client -->
+<div class="modal-overlay" id="addClientModal">
+  <div class="modal-box">
+    <span class="modal-close" data-close>&times;</span>
+    <h3>إضافة عميل جديد</h3>
+    <form id="addClientForm">
+      <div class="form-group"><label>اسم المتجر</label><input class="form-control" id="newStoreName" required></div>
+      <div class="form-group"><label>اسم المستخدم (Username)</label><input class="form-control" id="newUsername" required></div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div style="display:flex;gap:8px;">
+          <input class="form-control" id="newPassword" required>
+          <button type="button" class="btn btn-outline" id="generatePasswordBtn" style="white-space:nowrap;">توليد</button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">✅ إنشاء الحساب</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Success (show credentials once) -->
+<div class="modal-overlay" id="successClientModal">
+  <div class="modal-box" style="text-align:center;">
+    <div style="font-size:50px;margin-bottom:10px;">✅</div>
+    <h3>تم إنشاء الحساب بنجاح</h3>
+    <p style="color:var(--gray-500);margin-bottom:20px;">احفظ البيانات دي وابعتها للعميل، مش هتظهر تاني</p>
+    <div style="background:var(--gray-100);border-radius:12px;padding:16px;text-align:right;margin-bottom:16px;">
+      <p><strong>رابط الدخول:</strong> <span id="successLoginUrl"></span></p>
+      <p><strong>اسم المستخدم:</strong> <span id="successUsername"></span></p>
+      <p><strong>كلمة المرور:</strong> <span id="successPassword"></span></p>
+    </div>
+    <button class="btn btn-primary btn-block" id="copyCredentialsBtn">📋 نسخ البيانات</button>
+    <button class="btn btn-outline btn-block" style="margin-top:10px;" data-close>إغلاق</button>
+  </div>
+</div>
+
+<!-- Modal: Reset Password -->
+<div class="modal-overlay" id="resetPasswordModal">
+  <div class="modal-box">
+    <span class="modal-close" data-close>&times;</span>
+    <h3>إعادة تعيين كلمة المرور</h3>
+    <form id="resetPasswordForm">
+      <input type="hidden" id="resetStoreId">
+      <div class="form-group"><label>كلمة المرور الجديدة</label><input class="form-control" id="resetNewPassword" required></div>
+      <button type="submit" class="btn btn-primary btn-block">حفظ كلمة المرور الجديدة</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box" style="max-width:380px;text-align:center;">
+    <p id="confirmMessage" style="margin-bottom:20px;font-weight:700;"></p>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-outline btn-block" id="confirmCancelBtn">إلغاء</button>
+      <button class="btn btn-primary btn-block" style="background:var(--color-danger);" id="confirmOkBtn">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<script src="../config/config.js"></script>
+<script src="../src/js/utils.js"></script>
+<script src="../src/js/api.js"></script>
+<script src="js/super-dashboard.js"></script>
+</body>
+</html>

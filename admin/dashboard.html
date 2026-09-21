@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم | إدارة المتجر</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/variables.css">
+<link rel="stylesheet" href="../src/css/style.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img id="sidebarLogo" src="" alt="" style="display:none;">
+      <h2><span id="sidebarStoreName">لوحة التحكم</span></h2>
+    </div>
+    <nav>
+      <a href="#" data-section="overview" class="active">📊 نظرة عامة</a>
+      <a href="#" data-section="orders">📦 الطلبات</a>
+      <a href="#" data-section="customers">👥 العملاء</a>
+      <a href="#" data-section="products">🏷️ المنتجات</a>
+      <a href="#" data-section="settings">⚙️ الإعدادات</a>
+    </nav>
+    <button class="logout-btn" id="logoutBtn">🚪 تسجيل الخروج</button>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="topbar">
+      <button class="hamburger" id="hamburgerBtn">☰</button>
+      <h1 id="pageTitle">نظرة عامة</h1>
+      <button class="btn btn-outline" id="refreshBtn">🔄 تحديث البيانات</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section class="section-panel active" id="section-overview">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="table-card">
+        <table class="data-table">
+          <thead><tr><th>رقم الطلب</th><th>العميل</th><th>المنتج</th><th>الإجمالي</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+          <tbody id="recentOrdersBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ORDERS -->
+    <section class="section-panel" id="section-orders">
+      <div class="toolbar">
+        <input type="text" id="orderSearch" placeholder="🔍 بحث بالاسم أو الهاتف...">
+        <select id="statusFilter">
+          <option value="">كل الحالات</option>
+          <option value="جديد">جديد</option>
+          <option value="تم التواصل">تم التواصل</option>
+          <option value="مؤكد">مؤكد</option>
+          <option value="قيد التجهيز">قيد التجهيز</option>
+          <option value="تم الشحن">تم الشحن</option>
+          <option value="تم التوصيل">تم التوصيل</option>
+          <option value="ملغي">ملغي</option>
+        </select>
+        <input type="date" id="dateFrom">
+        <input type="date" id="dateTo">
+        <div class="spacer"></div>
+        <button class="btn btn-outline" id="exportCsvBtn">⬇️ تصدير CSV</button>
+      </div>
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>رقم الطلب</th><th>العميل</th><th>الهاتف</th><th>المنتج</th>
+              <th>الكمية</th><th>الإجمالي</th><th>الحالة</th><th>التاريخ</th><th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CUSTOMERS -->
+    <section class="section-panel" id="section-customers">
+      <div class="toolbar">
+        <input type="text" id="customerSearch" placeholder="🔍 بحث بالاسم أو الهاتف...">
+        <div class="spacer"></div>
+        <button class="btn btn-outline" id="exportCustomersCsvBtn">⬇️ تصدير CSV</button>
+      </div>
+      <div class="table-card">
+        <table class="data-table">
+          <thead><tr><th>الاسم</th><th>الهاتف</th><th>المحافظة</th><th>عدد الطلبات</th><th>إجمالي الإنفاق</th><th>آخر طلب</th><th></th></tr></thead>
+          <tbody id="customersTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="section-panel" id="section-products">
+      <div class="toolbar">
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="addProductBtn">➕ إضافة منتج</button>
+      </div>
+      <div id="productsList"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="section-panel" id="section-settings">
+      <div class="settings-tabs">
+        <button type="button" class="settings-tab active" data-tab="general">⚙️ بيانات المتجر</button>
+        <button type="button" class="settings-tab" data-tab="branding">🎨 الهوية البصرية</button>
+        <button type="button" class="settings-tab" data-tab="crm">🔗 ربط CRM</button>
+      </div>
+
+      <form class="settings-form" id="settingsForm">
+
+        <div class="settings-panel active" data-panel="general">
+          <div class="form-group"><label>اسم المتجر</label><input class="form-control" name="StoreName"></div>
+          <div class="form-group"><label>رقم الهاتف</label><input class="form-control" name="Phone"></div>
+          <div class="form-group"><label>رقم واتساب (بدون + وبدون صفر)</label><input class="form-control" name="WhatsApp" placeholder="2010xxxxxxxx"></div>
+          <div class="form-group"><label>العنوان</label><input class="form-control" name="Address"></div>
+          <div class="form-group"><label>فيسبوك</label><input class="form-control" name="Facebook"></div>
+          <div class="form-group"><label>انستجرام</label><input class="form-control" name="Instagram"></div>
+          <div class="form-group"><label>معلومات التوصيل</label><textarea class="form-control" name="DeliveryInfo" rows="2"></textarea></div>
+          <div class="form-group"><label>العملة</label><input class="form-control" name="Currency"></div>
+        </div>
+
+        <div class="settings-panel" data-panel="branding">
+          <p class="settings-hint">الألوان واللوجو دول بيظهروا في صفحة منتجاتك وفي لوحة التحكم دي، وبيتفرقوا تمامًا عن باقي التجار.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>اللون الأساسي</label>
+              <div class="color-input-row">
+                <input type="color" class="color-swatch" data-pair="PrimaryColor">
+                <input class="form-control" name="PrimaryColor" placeholder="#146356">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>لون العروض والخصومات</label>
+              <div class="color-input-row">
+                <input type="color" class="color-swatch" data-pair="AccentColor">
+                <input class="form-control" name="AccentColor" placeholder="#D9922E">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>رابط اللوجو (صورة مباشرة PNG/SVG)</label>
+            <input class="form-control" name="LogoURL" placeholder="https://...">
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="crm">
+          <p class="settings-hint">لو عايز بيانات العملاء والطلبات تتبعت تلقائيًا لأي CRM بتستخدمه (Zoho أو غيره)، اختار طريقة الربط تحت.</p>
+          <div class="form-group">
+            <label>طريقة الربط</label>
+            <select class="form-control" name="CRMProvider" id="crmProviderSelect">
+              <option value="none">بدون ربط (تصدير CSV يدوي فقط)</option>
+              <option value="webhook">Webhook عام (Zapier / Make / Pabbly / n8n)</option>
+              <option value="zoho">Zoho CRM مباشرة</option>
+            </select>
+          </div>
+
+          <div class="crm-fields" data-crm-panel="webhook">
+            <div class="form-group">
+              <label>رابط الـ Webhook</label>
+              <input class="form-control" name="CRMWebhookURL" placeholder="https://hooks.zapier.com/...">
+            </div>
+            <p class="settings-hint">أنشئ "Zap" أو "Scenario" في Zapier/Make بيستقبل Webhook، ووصّله بعدين بـ Zoho CRM أو أي نظام تاني. الطريقة دي بتشتغل مع أي CRM تقريبًا من غير برمجة.</p>
+          </div>
+
+          <div class="crm-fields" data-crm-panel="zoho">
+            <div class="form-row">
+              <div class="form-group"><label>Zoho Client ID</label><input class="form-control" name="ZohoClientID"></div>
+              <div class="form-group"><label>Zoho Client Secret</label><input class="form-control" name="ZohoClientSecret" type="password"></div>
+            </div>
+            <div class="form-group"><label>Zoho Refresh Token</label><input class="form-control" name="ZohoRefreshToken" type="password"></div>
+            <div class="form-row">
+              <div class="form-group"><label>Zoho API Domain</label><input class="form-control" name="ZohoAPIDomain" placeholder="https://www.zohoapis.com"></div>
+              <div class="form-group"><label>الوحدة (Module)</label><input class="form-control" name="ZohoModule" placeholder="Leads"></div>
+            </div>
+            <p class="settings-hint">تقدر تجيب البيانات دي من Zoho API Console (نوع Self Client). لو الشركة بتاعتك في منطقة غير أمريكا، غيّر الدومين حسب منطقتك (مثلاً zohoapis.eu أو zohoapis.in).</p>
+          </div>
+
+          <button type="button" class="btn btn-outline" id="testCrmBtn">🔌 اختبار الاتصال الآن</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px;">💾 حفظ الإعدادات</button>
+      </form>
+    </section>
+
+    <div class="platform-footer" id="platformFooter"></div>
+  </main>
+</div>
+<div class="modal-overlay" id="orderModal">
+  <div class="modal-box">
+    <span class="modal-close" data-close>&times;</span>
+    <h3>تفاصيل الطلب</h3>
+    <div id="orderModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="customerModal">
+  <div class="modal-box">
+    <span class="modal-close" data-close>&times;</span>
+    <h3>سجل طلبات العميل</h3>
+    <div id="customerModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <span class="modal-close" data-close>&times;</span>
+    <h3 id="productModalTitle">إضافة / تعديل منتج</h3>
+    <form id="productForm">
+      <input type="hidden" name="Product ID">
+      <div class="form-group"><label>اسم المنتج</label><input class="form-control" name="Product Name" required></div>
+      <div class="form-group"><label>الوصف</label><textarea class="form-control" name="Description" rows="2"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>السعر</label><input type="number" class="form-control" name="Price" required></div>
+        <div class="form-group"><label>السعر قبل الخصم</label><input type="number" class="form-control" name="Old Price"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>رسوم التوصيل</label><input type="number" class="form-control" name="Delivery Fee"></div>
+        <div class="form-group"><label>حالة المخزون</label><input class="form-control" name="Stock Status" placeholder="متوفر"></div>
+      </div>
+      <div class="form-group"><label>رابط الصورة الرئيسية</label><input class="form-control" name="Main Image"></div>
+      <div class="form-group"><label>روابط الصور (مفصولة بفاصلة)</label><textarea class="form-control" name="Gallery Images" rows="2"></textarea></div>
+      <div class="form-group">
+        <label>المميزات (سطر لكل ميزة)</label>
+        <textarea class="form-control" name="Features" rows="3" placeholder="بطارية تدوم طويلاً&#10;مقاوم للماء&#10;ضمان سنة"></textarea>
+      </div>
+      <div class="form-group">
+        <label>المواصفات (التسمية: القيمة - سطر لكل مواصفة)</label>
+        <textarea class="form-control" name="Specifications" rows="3" placeholder="الوزن: 200 جرام&#10;اللون: أسود"></textarea>
+      </div>
+      <div class="form-group">
+        <label>الأسئلة الشائعة (السؤال | الإجابة - سطر لكل سؤال)</label>
+        <textarea class="form-control" name="FAQ" rows="3" placeholder="كم مدة التوصيل؟ | من 2 إلى 4 أيام"></textarea>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" name="Active" style="width:auto;"> منتج نشط (يظهر في صفحته)</label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">💾 حفظ المنتج</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box" style="max-width:380px;text-align:center;">
+    <p id="confirmMessage" style="margin-bottom:20px;font-weight:700;"></p>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-outline btn-block" id="confirmCancelBtn">إلغاء</button>
+      <button class="btn btn-primary btn-block" style="background:var(--color-danger);" id="confirmOkBtn">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<script src="../config/config.js"></script>
+<script src="../src/js/utils.js"></script>
+<script src="../src/js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
