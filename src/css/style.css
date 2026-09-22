@@ -255,3 +255,29 @@ section { padding: var(--space-section) 0; }
    Toast (تنبيهات صغيرة)
    ============================================ */
 #toastContainer > div { animation: toastIn .25s ease-out; }
+/* ==========================================
+   تعديل منع السكرول الأفقي والتجاوب مع جميع الشاشات
+   ========================================== */
+
+html, body {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+img, iframe, video, svg {
+  max-width: 100% !important;
+  height: auto;
+}
+
+/* منع الـ Navbar من الخروج عن الشاشة في الموبايل */
+nav, header {
+  max-width: 100% !important;
+  overflow: hidden;
+}
