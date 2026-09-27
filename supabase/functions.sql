@@ -553,6 +553,58 @@ end;
 $$;
 
 -- ------------------------------------------------------------
+-- get_store_admin_view: يسمح للمدير العام بعرض كل بيانات أي تاجر
+-- (طلباته، منتجاته، عملاءه، إعداداته) بالتفصيل - للعرض فقط
+-- ------------------------------------------------------------
+create or replace function get_store_admin_view(p_token uuid, p_store_id uuid)
+returns jsonb
+language plpgsql security definer as $$
+declare v_session sessions; v_store stores;
+begin
+  v_session := _touch_session(p_token);
+  if v_session.token is null or v_session.role <> 'superadmin' then
+    return jsonb_build_object('success', false, 'error', 'هذا الإجراء متاح فقط للمدير العام');
+  end if;
+
+  select * into v_store from stores where id = p_store_id;
+  if v_store.id is null then
+    return jsonb_build_object('success', false, 'error', 'المتجر غير موجود');
+  end if;
+
+  return jsonb_build_object(
+    'success', true,
+    'storeName', v_store.store_name,
+    'status', v_store.status,
+    'orders', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'Order ID', o.order_number, 'Date', to_char(o.created_at, 'YYYY-MM-DD'), 'Time', to_char(o.created_at, 'HH24:MI:SS'),
+        'Customer Name', o.customer_name, 'Phone', o.phone, 'Governorate', o.governorate, 'Address', o.address,
+        'Product', o.product_name, 'Quantity', o.quantity, 'Unit Price', o.unit_price, 'Delivery Fee', o.delivery_fee,
+        'Total', o.total, 'Notes', o.notes, 'Order Status', o.status
+      ) order by o.created_at desc)
+      from orders o where o.store_id = p_store_id
+    ), '[]'::jsonb),
+    'customers', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'Name', c.name, 'Phone', c.phone, 'Governorate', c.governorate,
+        'Total Orders', c.total_orders, 'Total Spent', c.total_spent,
+        'Last Order Date', to_char(c.last_order_at, 'YYYY-MM-DD')
+      ) order by c.last_order_at desc)
+      from customers c where c.store_id = p_store_id
+    ), '[]'::jsonb),
+    'products', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'Product ID', p.id, 'Product Name', p.product_name, 'Price', p.price,
+        'Old Price', p.old_price, 'Main Image', p.main_image, 'Active', p.active, 'Stock Status', p.stock_status
+      ))
+      from products p where p.store_id = p_store_id
+    ), '[]'::jsonb),
+    'settings', coalesce(v_store.settings, '{}'::jsonb) || jsonb_build_object('StoreName', v_store.store_name)
+  );
+end;
+$$;
+
+-- ------------------------------------------------------------
 -- منح صلاحية تنفيذ كل الدوال دي لأي زائر (anon) — الحماية الفعلية
 -- جوه كل دالة نفسها (فحص التوكين + الدور)، مش على مستوى الجدول
 -- ------------------------------------------------------------

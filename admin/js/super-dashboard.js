@@ -139,12 +139,17 @@ function renderClientsTable() {
       <td><span class="status-badge ${c.Status === 'Active' ? 'status-confirmed' : 'status-cancelled'}">${c.Status === 'Active' ? 'نشط' : 'موقوف'}</span></td>
       <td>${escapeHtml(c.CreatedAt)}</td>
       <td>
+        <button class="action-btn action-view" data-viewstore="${c.StoreID}">👁️ عرض التفاصيل</button>
         <button class="action-btn action-view" data-toggle="${c.StoreID}" data-status="${c.Status}">${c.Status === 'Active' ? 'إيقاف' : 'تفعيل'}</button>
         <button class="action-btn action-view" data-reset="${c.StoreID}">كلمة مرور</button>
         <button class="action-btn action-delete" data-delete="${c.StoreID}">حذف</button>
       </td>
     </tr>
   `).join('') : `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray-500);">لا يوجد عملاء بعد</td></tr>`;
+
+  document.querySelectorAll('[data-viewstore]').forEach(btn => {
+    btn.addEventListener('click', () => viewStoreDetails(btn.dataset.viewstore));
+  });
 
   document.querySelectorAll('[data-toggle]').forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -224,3 +229,79 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async (e
 });
 
 loadClients();
+
+/* ---------- عرض تفاصيل تاجر معين (طلباته، منتجاته، عملاءه) ---------- */
+async function viewStoreDetails(storeId) {
+  document.getElementById('storeDetailsContent').innerHTML = '<p style="text-align:center;padding:30px;">جاري التحميل...</p>';
+  openModal('storeDetailsModal');
+  try {
+    const res = await API.get('getStoreAdminView', { token: STATE.token, storeId });
+    if (!res.success) {
+      document.getElementById('storeDetailsContent').innerHTML = `<p style="color:var(--color-danger);">${escapeHtml(res.error)}</p>`;
+      return;
+    }
+    renderStoreDetails(res);
+  } catch (err) {
+    document.getElementById('storeDetailsContent').innerHTML = `<p style="color:var(--color-danger);">${escapeHtml(err.message)}</p>`;
+  }
+}
+
+function renderStoreDetails(data) {
+  const currency = (data.settings && data.settings.Currency) || 'ج.م';
+  const revenue = data.orders.filter(o => o['Order Status'] !== 'ملغي').reduce((sum, o) => sum + (Number(o['Total']) || 0), 0);
+
+  document.getElementById('storeDetailsTitle').textContent = '📋 ' + data.storeName;
+
+  document.getElementById('storeDetailsContent').innerHTML = `
+    <div class="stats-grid" style="margin-bottom:20px;">
+      <div class="stat-card blue"><div class="label">إجمالي الطلبات</div><div class="value">${data.orders.length}</div></div>
+      <div class="stat-card green"><div class="label">إجمالي الإيرادات</div><div class="value">${formatCurrency(revenue, currency)}</div></div>
+      <div class="stat-card amber"><div class="label">عدد المنتجات</div><div class="value">${data.products.length}</div></div>
+      <div class="stat-card blue"><div class="label">عدد العملاء</div><div class="value">${data.customers.length}</div></div>
+    </div>
+
+    <h4 style="margin:18px 0 10px;">📦 الطلبات (${data.orders.length})</h4>
+    <div class="table-card" style="margin-bottom:22px;">
+      <table class="data-table">
+        <thead><tr><th>رقم الطلب</th><th>العميل</th><th>الهاتف</th><th>المنتج</th><th>الإجمالي</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+        <tbody>
+          ${data.orders.length ? data.orders.map(o => `
+            <tr>
+              <td>${escapeHtml(o['Order ID'])}</td><td>${escapeHtml(o['Customer Name'])}</td><td>${escapeHtml(o['Phone'])}</td>
+              <td>${escapeHtml(o['Product'])}</td><td>${formatCurrency(o['Total'], currency)}</td>
+              <td>${escapeHtml(o['Order Status'])}</td><td>${escapeHtml(o['Date'])}</td>
+            </tr>`).join('') : `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--gray-500);">لا توجد طلبات بعد</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:18px 0 10px;">🏷️ المنتجات (${data.products.length})</h4>
+    <div class="table-card" style="margin-bottom:22px;">
+      <table class="data-table">
+        <thead><tr><th>المنتج</th><th>السعر</th><th>الحالة</th><th>مفعّل؟</th></tr></thead>
+        <tbody>
+          ${data.products.length ? data.products.map(p => `
+            <tr>
+              <td>${escapeHtml(p['Product Name'])}</td><td>${formatCurrency(p['Price'], currency)}</td>
+              <td>${escapeHtml(p['Stock Status'])}</td>
+              <td>${(p['Active'] === true || p['Active'] === 'TRUE') ? '✅' : '⛔'}</td>
+            </tr>`).join('') : `<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--gray-500);">لا توجد منتجات بعد</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:18px 0 10px;">👥 العملاء (${data.customers.length})</h4>
+    <div class="table-card">
+      <table class="data-table">
+        <thead><tr><th>الاسم</th><th>الهاتف</th><th>المحافظة</th><th>عدد الطلبات</th><th>إجمالي الإنفاق</th></tr></thead>
+        <tbody>
+          ${data.customers.length ? data.customers.map(c => `
+            <tr>
+              <td>${escapeHtml(c['Name'])}</td><td>${escapeHtml(c['Phone'])}</td><td>${escapeHtml(c['Governorate'])}</td>
+              <td>${escapeHtml(c['Total Orders'])}</td><td>${formatCurrency(c['Total Spent'], currency)}</td>
+            </tr>`).join('') : `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--gray-500);">لا يوجد عملاء بعد</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
