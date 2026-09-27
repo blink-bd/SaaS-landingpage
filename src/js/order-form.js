@@ -79,6 +79,17 @@ function initOrderForm() {
       document.getElementById('successPanel').style.display = 'block';
       document.getElementById('successOrderId').textContent = res.orderId;
 
+      // مزامنة مع CRM التاجر (لو مفعّل) - بأفضل جهد ممكن، وفشلها ميأثرش على تجربة الزبون
+      API._crmSync({
+        storeId: window.APP_STATE.storeId,
+        mode: 'order',
+        order: {
+          orderId: res.orderId, customerName: data.fullName, phone: data.phone,
+          governorate: data.governorate, address: data.address,
+          productName: res.productName, quantity: quantity, total: res.total
+        }
+      }).catch(() => { /* تجاهل مقصود: عدم توصيل CRM التاجر مش لازم يمنع نجاح الطلب */ });
+
       const waMessage = encodeURIComponent(
         `طلب جديد ✅\nرقم الطلب: ${res.orderId}\nالاسم: ${data.fullName}\nالهاتف: ${data.phone}\nالمنتج: ${res.productName}\nالكمية: ${quantity}\nالإجمالي: ${res.total} ${window.APP_STATE.currency}\nالمحافظة: ${data.governorate}\nالعنوان: ${data.address}`
       );

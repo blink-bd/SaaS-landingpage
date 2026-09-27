@@ -141,7 +141,6 @@ function renderClientsTable() {
       <td>
         <button class="action-btn action-view" data-toggle="${c.StoreID}" data-status="${c.Status}">${c.Status === 'Active' ? 'إيقاف' : 'تفعيل'}</button>
         <button class="action-btn action-view" data-reset="${c.StoreID}">كلمة مرور</button>
-        <a class="action-btn action-view" href="https://docs.google.com/spreadsheets/d/${c.SpreadsheetID}/edit" target="_blank">الشيت</a>
         <button class="action-btn action-delete" data-delete="${c.StoreID}">حذف</button>
       </td>
     </tr>

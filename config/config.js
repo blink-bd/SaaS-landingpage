@@ -3,7 +3,10 @@
  * الفرونت إند ده هيخدم كل العملاء بنفس الملفات — الفرق بس في البيانات
  */
 const APP_CONFIG = {
-  apiUrl: "https://script.google.com/macros/s/AKfycbyk2VyahizGAcb_pBC6DYouO0JOZgYfVAoBOsX_jEG31PFlEex9-pc-64iOiXIpe_w1-Q/exec",
+  // من لوحة Supabase: Project Settings → API → Project URL
+  supabaseUrl: "https://ufsfzgcclvmymuzsxwwi.supabase.co",
+  // من نفس الصفحة: Project API keys → anon public (مش الـ service_role أبدًا هنا)
+  supabaseAnonKey: "sb_publishable_2BT7Ky7PFWb8QOkvuiWdNQ_m0JK9My3",
   // اتركه فاضي عشان يتحدد تلقائيًا من رابط الموقع، أو حدده يدويًا لو محتاج
   landingBaseUrl: ""
 };
