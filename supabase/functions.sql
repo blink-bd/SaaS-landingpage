@@ -212,6 +212,7 @@ begin
   return jsonb_build_object(
     'success', true,
     'storeName', v_session.store_name,
+    'customDomain', (select custom_domain from stores where id = v_session.store_id),
     'orders', coalesce((
       select jsonb_agg(jsonb_build_object(
         'Order ID', o.order_number, 'Date', to_char(o.created_at, 'YYYY-MM-DD'), 'Time', to_char(o.created_at, 'HH24:MI:SS'),
@@ -442,7 +443,7 @@ begin
   return jsonb_build_object('success', true, 'clients', coalesce((
     select jsonb_agg(jsonb_build_object(
       'StoreID', id, 'StoreName', store_name, 'Username', username,
-      'Status', status, 'CreatedAt', to_char(created_at, 'YYYY-MM-DD')
+      'Status', status, 'CreatedAt', to_char(created_at, 'YYYY-MM-DD'), 'CustomDomain', custom_domain
     ) order by created_at desc)
     from stores
   ), '[]'::jsonb));
@@ -601,6 +602,48 @@ begin
     ), '[]'::jsonb),
     'settings', coalesce(v_store.settings, '{}'::jsonb) || jsonb_build_object('StoreName', v_store.store_name)
   );
+end;
+$$;
+
+-- ------------------------------------------------------------
+-- resolveStoreByDomain: الموقع بيناديها لما حد يفتح دومين مخصص
+-- عشان يعرف "الدومين ده بتاع مين" (بدون تسجيل دخول، بيانات عامة)
+-- ------------------------------------------------------------
+create or replace function resolve_store_by_domain(p_domain text)
+returns jsonb
+language sql security definer as $$
+  select case
+    when s.id is not null then jsonb_build_object('success', true, 'storeId', s.id)
+    else jsonb_build_object('success', false, 'error', 'دومين غير مربوط بأي متجر')
+  end
+  from (select 1) x
+  left join stores s on lower(s.custom_domain) = lower(p_domain)
+  limit 1;
+$$;
+
+-- ------------------------------------------------------------
+-- updateStoreDomain: المدير العام بس يقدر يربط/يفك دومين تاجر
+-- ------------------------------------------------------------
+create or replace function update_store_domain(p_token uuid, p_store_id uuid, p_domain text)
+returns jsonb
+language plpgsql security definer as $$
+declare v_session sessions; v_clean_domain text;
+begin
+  v_session := _touch_session(p_token);
+  if v_session.token is null or v_session.role <> 'superadmin' then
+    return jsonb_build_object('success', false, 'error', 'هذا الإجراء متاح فقط للمدير العام');
+  end if;
+
+  v_clean_domain := nullif(trim(lower(p_domain)), '');
+  if v_clean_domain is not null and exists (
+    select 1 from stores where custom_domain = v_clean_domain and id <> p_store_id
+  ) then
+    return jsonb_build_object('success', false, 'error', 'الدومين ده مربوط بمتجر تاني بالفعل');
+  end if;
+
+  update stores set custom_domain = v_clean_domain where id = p_store_id;
+  if not found then return jsonb_build_object('success', false, 'error', 'المتجر غير موجود'); end if;
+  return jsonb_build_object('success', true, 'domain', v_clean_domain);
 end;
 $$;
 

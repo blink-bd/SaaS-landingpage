@@ -89,6 +89,7 @@ async function loadBootstrap() {
     STATE.customers = res.customers || [];
     STATE.products = res.products || [];
     STATE.settings = res.settings || {};
+    STATE.customDomain = res.customDomain || '';
     if (res.storeName) {
       STATE.storeName = res.storeName;
       localStorage.setItem('store_name', res.storeName);
@@ -322,6 +323,10 @@ function viewCustomerOrders(phone) {
 
 /* ---------- المنتجات ---------- */
 function buildProductLink(productId) {
+  // لو المدير العام ربط دومين مخصص للتاجر، اللينك بيطلع بالدومين ده من غير store في الرابط
+  if (STATE.customDomain) {
+    return `https://${STATE.customDomain}/?product=${encodeURIComponent(productId)}`;
+  }
   const base = getLandingBaseUrl();
   return `${base}?store=${encodeURIComponent(STATE.storeId)}&product=${encodeURIComponent(productId)}`;
 }

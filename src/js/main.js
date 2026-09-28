@@ -138,7 +138,17 @@ function initStickyCtaVisibility() {
 }
 
 async function bootstrapLandingPage() {
-  const { storeId, productId } = getUrlParams();
+  let { storeId, productId } = getUrlParams();
+
+  // لو الرابط مفيهوش ?store=، يبقى غالبًا الزبون داخل من دومين مخصص بتاع تاجر
+  // فبنسأل قاعدة البيانات: "الدومين ده بتاع مين؟"
+  if (!storeId) {
+    try {
+      const domainRes = await API.get('resolveStoreByDomain', { domain: window.location.hostname });
+      if (domainRes.success) storeId = domainRes.storeId;
+    } catch (err) { /* هيتعامل مع الحالة دي تحت كرابط غير صالح */ }
+  }
+
   if (!storeId) { showInvalidLinkMessage('رابط غير صالح'); return; }
 
   window.APP_STATE.storeId = storeId;

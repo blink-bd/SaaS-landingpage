@@ -45,7 +45,7 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>اسم المتجر</th><th>اسم المستخدم</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إجراءات</th>
+              <th>اسم المتجر</th><th>اسم المستخدم</th><th>الدومين</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إجراءات</th>
             </tr>
           </thead>
           <tbody id="clientsTableBody"></tbody>
@@ -145,6 +145,22 @@
       <button class="btn btn-outline btn-block" id="confirmCancelBtn">إلغاء</button>
       <button class="btn btn-primary btn-block" style="background:var(--color-danger);" id="confirmOkBtn">تأكيد</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="domainModal">
+  <div class="modal-box">
+    <span class="modal-close" data-close>&times;</span>
+    <h3>🌐 ربط دومين مخصص</h3>
+    <form id="domainForm">
+      <input type="hidden" id="domainStoreId">
+      <div class="form-group">
+        <label>الدومين (بدون https:// وبدون / في الآخر)</label>
+        <input class="form-control" id="domainInput" placeholder="mystore.com" dir="ltr">
+      </div>
+      <p class="settings-hint">سيب الخانة فاضية لو عايز تفك الدومين عن التاجر. بعد الحفظ لازم تضيف نفس الدومين في Cloudflare Pages (Custom domains) وتظبط الـ DNS بتاعه.</p>
+      <button type="submit" class="btn btn-primary btn-block">💾 حفظ الدومين</button>
+    </form>
   </div>
 </div>
 

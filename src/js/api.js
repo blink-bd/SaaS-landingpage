@@ -36,7 +36,9 @@ const ACTION_TO_RPC = {
   updateClientInfo: 'update_client_info',
   getSuperAdminBranding: 'get_superadmin_branding',
   updateSuperAdminBranding: 'update_superadmin_branding',
-  getStoreAdminView: 'get_store_admin_view'
+  getStoreAdminView: 'get_store_admin_view',
+  resolveStoreByDomain: 'resolve_store_by_domain',
+  updateStoreDomain: 'update_store_domain'
 };
 
 // تحويل شكل الـ params القادم من باقي الكود إلى أسماء معاملات (p_xxx)
@@ -67,6 +69,8 @@ function mapParams(action, params) {
     case 'getSuperAdminBranding': return {};
     case 'updateSuperAdminBranding': return { p_token: params.token, p_branding: params.branding };
     case 'getStoreAdminView': return { p_token: params.token, p_store_id: params.storeId };
+    case 'resolveStoreByDomain': return { p_domain: params.domain };
+    case 'updateStoreDomain': return { p_token: params.token, p_store_id: params.storeId, p_domain: params.domain };
     default: return params;
   }
 }

@@ -136,16 +136,26 @@ function renderClientsTable() {
     <tr>
       <td><strong>${escapeHtml(c.StoreName)}</strong></td>
       <td>${escapeHtml(c.Username)}</td>
+      <td dir="ltr">${c.CustomDomain ? escapeHtml(c.CustomDomain) : '<span style="color:var(--gray-500);">—</span>'}</td>
       <td><span class="status-badge ${c.Status === 'Active' ? 'status-confirmed' : 'status-cancelled'}">${c.Status === 'Active' ? 'نشط' : 'موقوف'}</span></td>
       <td>${escapeHtml(c.CreatedAt)}</td>
       <td>
         <button class="action-btn action-view" data-viewstore="${c.StoreID}">👁️ عرض التفاصيل</button>
         <button class="action-btn action-view" data-toggle="${c.StoreID}" data-status="${c.Status}">${c.Status === 'Active' ? 'إيقاف' : 'تفعيل'}</button>
+        <button class="action-btn action-view" data-domain="${c.StoreID}" data-current="${escapeHtml(c.CustomDomain || '')}">🌐 دومين</button>
         <button class="action-btn action-view" data-reset="${c.StoreID}">كلمة مرور</button>
         <button class="action-btn action-delete" data-delete="${c.StoreID}">حذف</button>
       </td>
     </tr>
-  `).join('') : `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray-500);">لا يوجد عملاء بعد</td></tr>`;
+  `).join('') : `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--gray-500);">لا يوجد عملاء بعد</td></tr>`;
+
+  document.querySelectorAll('[data-domain]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('domainStoreId').value = btn.dataset.domain;
+      document.getElementById('domainInput').value = btn.dataset.current || '';
+      openModal('domainModal');
+    });
+  });
 
   document.querySelectorAll('[data-viewstore]').forEach(btn => {
     btn.addEventListener('click', () => viewStoreDetails(btn.dataset.viewstore));
@@ -305,3 +315,18 @@ function renderStoreDetails(data) {
     </div>
   `;
 }
+
+/* ---------- ربط دومين مخصص بتاجر ---------- */
+document.getElementById('domainForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const storeId = document.getElementById('domainStoreId').value;
+  const domain = document.getElementById('domainInput').value.trim().replace(/^https?:\/\//i, '').replace(/\/.*$/, '');
+  try {
+    const res = await API.post('updateStoreDomain', { token: STATE.token, storeId, domain });
+    if (res.success) {
+      showToast(res.domain ? 'تم ربط الدومين بالتاجر' : 'تم فك الدومين عن التاجر', 'success');
+      closeModal('domainModal');
+      loadClients();
+    } else showToast(res.error, 'error');
+  } catch (err) { showToast(err.message, 'error'); }
+});

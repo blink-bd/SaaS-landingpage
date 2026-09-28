@@ -15,6 +15,7 @@ create table stores (
   username        text not null unique,
   password_hash   text not null,
   status          text not null default 'Active' check (status in ('Active', 'Suspended')),
+  custom_domain   text unique, -- الدومين المخصص لهذا التاجر (بيحدده المدير العام بس)
   -- كل الإعدادات المرنة (هاتف، واتساب، ألوان، لوجو، CRM...) في عمود JSON واحد
   -- بدل عمود منفصل لكل حقل، عشان نضيف حقول جديدة مستقبلًا من غير ما نعدّل هيكل الجدول
   settings        jsonb not null default '{
